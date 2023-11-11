@@ -1,7 +1,0 @@
-The propsed solution for this exercise would be to execute the command 
-chmod 
-with -R ( recursive option on LAB1 folder ) with 750 code
-7 being full access to admin
-5 being reading and executing to users
-0 being no acces to other users
--> chmod -R 750 LAB1
