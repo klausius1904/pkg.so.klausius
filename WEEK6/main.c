@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
             header.group_acces[0], header.group_acces[1], header.group_acces[2],
             header.other_acces[1], header.other_acces[2], header.other_acces[2]
             );
-    printf("%s\n", to_print);
+    write(fout, to_print, strlen(to_print));
     free(data);
     close_file(fin);
     close_file(fout);
