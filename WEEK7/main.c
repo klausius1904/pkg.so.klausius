@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include "dynamicprog.h"
 #include <sys/stat.h>
+#include <sys/fcntl.h>
+#include <string.h>
+#include <unistd.h>
 
 int main(int argc, char *argv[]) {
     DIR *working_directory = NULL;
@@ -14,6 +17,8 @@ int main(int argc, char *argv[]) {
     int *file_descriptors = NULL;
     struct stat *file_stats = NULL;
     char **messages = NULL;
+
+    int fout;
 
     check_args(argc);
 
@@ -29,14 +34,22 @@ int main(int argc, char *argv[]) {
 
     messages = process_filestats(file_stats, file_names, file_descriptors, names_size, argv[1]);
 
-    for(int i=2; i<names_size; i++){
-        printf("a.%s", messages[i]);
+    if ((fout = creat("statistica.txt", S_IRUSR | S_IWUSR)) == -1)
+    {
+        perror("EROARE LA INCHIDEREA FISIERULUI\n");
+        exit(EXIT_FAILURE);
     }
+
+    for(int i = 2; i<names_size; i++){
+        write(fout, messages[i], strlen(messages[i]));
+    }
+
 
     printf("\n");
     free(file_descriptors);
     free(file_stats);
     free_string_array(file_names);
+    free_string_array(messages);
     free_string_array(absolute_filepath);
     close_dir(working_directory);
     return 0;
