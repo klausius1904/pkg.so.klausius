@@ -1,6 +1,7 @@
 #include "dynamicprog.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 
 char *allocate_string(int size) {
@@ -22,7 +23,16 @@ char **allocate_string_array(int size) {
     return dynamic_string_array;
 }
 
-char **reallocate_string_array(char **to_realloc, int new_size) {
+char *reallocate_string(char *string, int size) {
+
+    if ((string = realloc(string, strlen(string) + 1)) == NULL) { // NOLINT(*-suspicious-realloc-usage)
+        perror("EROARE LA REALOCAREA DINAMICA");
+        exit(EXIT_FAILURE);
+    }
+    return string;
+}
+
+char **reallocate_string_array(char **to_realloc, unsigned long new_size) {
     char **dynamic_realloc_array = NULL;
     if ((dynamic_realloc_array = (char **) realloc(to_realloc, new_size * sizeof(char *))) == NULL) {
         perror("EROARE LA ALOCARE DINAMICA");
@@ -59,3 +69,5 @@ struct stat *allocate_filestats(int size) {
     }
     return filestat;
 }
+
+
