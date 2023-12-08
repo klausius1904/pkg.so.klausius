@@ -37,7 +37,6 @@ int main(int argc, char *argv[]) {
     while((in_dir = readdir(input)) != NULL) {
         files_entries[index++] = in_dir;
     }
-    printf("INDEX SIZE: %d\n", index);
 
     for(int i = 2 ; i < index ; i++){
         if((file_descriptors[i] = open(files_entries[i]->d_name, O_RDONLY)) == -1) {
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]) {
                 exit(-1);
             }
             process_filestat(file_stat, files_entries[i]->d_name, file_descriptors[i], argv[2]);
-            exit(0);//iese din fork
+            exit(0);
         }
 
     }
@@ -70,7 +69,7 @@ int main(int argc, char *argv[]) {
     for(int j = 2; j < index; j++) {
         int status;
         if ( waitpid(pids[j], &status, 0) == -1 ) {
-            perror("waitpid failed");
+            perror("FAIL TO WAITPID");
             return EXIT_FAILURE;
         }
         if ( WIFEXITED(status) ) {

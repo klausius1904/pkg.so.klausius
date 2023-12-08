@@ -11,12 +11,14 @@
 
 
 char *process_filestat(struct stat file_stat, char *file_name, int file_descriptor, char *out_dir) {
-    //chdir(out_dir);
+
     char status_filename[100];
     char message[1000];
+    int fout;
 
     strcpy(status_filename, file_name);
     strcat(status_filename, "_status.txt");
+
     if (S_ISREG(file_stat.st_mode)) {
         if (strcmp(".bmp", file_name + (strlen(file_name) - 4)) == 0) {
             strcpy(message,make_bmp_message(file_stat, file_descriptor, file_name));
@@ -30,7 +32,17 @@ char *process_filestat(struct stat file_stat, char *file_name, int file_descript
     } else {
         /* do nothing */
     }
-    printf("%s\n", message);
+    close(file_descriptor);
+
+    chdir(out_dir);
+    if ((fout = creat(status_filename, S_IRUSR | S_IWUSR)) == -1)
+    {
+        perror("EROARE LA INCHIDEREA FISIERULUI\n");
+        exit(EXIT_FAILURE);
+    }
+
+    write(fout, message, strlen(message));
+    close(fout);
 
     return NULL;
 }

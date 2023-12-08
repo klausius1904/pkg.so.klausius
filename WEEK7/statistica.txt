@@ -5,30 +5,30 @@ drepturi de acces user: RWX
 drepturi de acces grup: R-X
 drepturi de acces other: -XX
 nume fisier: test_dir1
-identificatorul utilizatorului: root
+identificatorul utilizatorului: grozavklaus
 drepturi de acces user: RWX
 drepturi de acces grup: R-X
 drepturi de acces other: -XX
 nume fisier: test_bmp.bmp
 inaltime: 427
 lungime: 640
-dimensiune: 819896
-identificatorul utilizatorului: root
-timpul ultimei modificari: 12.11.2023
+dimensiune: 1229816
+identificatorul utilizatorului: grozavklaus
+timpul ultimei modificari: 29.11.2023
 contorul de legaturi: 1
 drepturi de acces user: RW-
 drepturi de acces grup: R--
 drepturi de acces other: ---
 nume fisier: test_file
 dimensiune: 34
-identificatorul utilizatorului: root
+identificatorul utilizatorului: grozavklaus
 timpul ultimei modificari: 12.11.2023
 contorul de legaturi: 1
 drepturi de acces user: RW-
 drepturi de acces grup: R--
 drepturi de acces other: ---
 nume fisier: test_dir2
-identificatorul utilizatorului: root
+identificatorul utilizatorului: grozavklaus
 drepturi de acces user: RWX
 drepturi de acces grup: R-X
 drepturi de acces other: -XX
