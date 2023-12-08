@@ -22,24 +22,6 @@ typedef struct Date {
     short day, month, year;
 } DATE;
 
-typedef struct {
-    char signature[2];
-    int size;
-    int reserved;
-    int offset;
-    int headerSize;
-    int width;
-    int height;
-    short planes;
-    short bitsPerPixel;
-    int compression;
-    int imageSize;
-    int xPixelsPerM;
-    int yPixelsPerM;
-    int colorsUsed;
-    int colorsImportant;
-}BMPHeader;
-
 char *make_bmp_message(struct stat file_stat, int file_descriptor, char *file_name);
 char *make_fil_message(struct stat file_stat, int file_descriptor, char *file_name);
 char *make_dir_message(struct stat file_stat, int file_descriptor, char *file_name);

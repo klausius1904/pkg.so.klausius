@@ -10,10 +10,11 @@
 #include "message.h"
 
 
-char *process_filestat(struct stat file_stat, char *file_name, int file_descriptor, char *out_dir) {
+int process_filestat(struct stat file_stat, char *file_name, int file_descriptor, char *out_dir) {
 
     char status_filename[100];
     char message[1000];
+    int no_lines = 0;
     int fout;
 
     strcpy(status_filename, file_name);
@@ -22,13 +23,17 @@ char *process_filestat(struct stat file_stat, char *file_name, int file_descript
     if (S_ISREG(file_stat.st_mode)) {
         if (strcmp(".bmp", file_name + (strlen(file_name) - 4)) == 0) {
             strcpy(message,make_bmp_message(file_stat, file_descriptor, file_name));
+            no_lines = 10;
         } else {
             strcpy(message,make_fil_message(file_stat, file_descriptor, file_name));
+            no_lines = 8;
         }
     } else if (S_ISDIR(file_stat.st_mode)) {
         strcpy(message,make_dir_message(file_stat, file_descriptor, file_name));
+        no_lines = 8;
     } else if (S_ISLNK(file_stat.st_mode)) {
         strcpy(message,make_link_message(file_stat, file_descriptor, file_name));
+        no_lines = 6;
     } else {
         /* do nothing */
     }
@@ -44,5 +49,5 @@ char *process_filestat(struct stat file_stat, char *file_name, int file_descript
     write(fout, message, strlen(message));
     close(fout);
 
-    return NULL;
+    return no_lines;
 }

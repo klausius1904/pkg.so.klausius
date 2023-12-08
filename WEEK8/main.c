@@ -12,6 +12,7 @@
 int main(int argc, char *argv[]) {
     int index = 0;
     int file_descriptors[MAX_ENTRIES];
+    int no_lines;
     int pids[MAX_ENTRIES];
 
     DIR *input, *output;
@@ -60,7 +61,8 @@ int main(int argc, char *argv[]) {
                 perror("EROARE LA DESCHIDEREA STATISTICII");
                 exit(-1);
             }
-            process_filestat(file_stat, files_entries[i]->d_name, file_descriptors[i], argv[2]);
+            no_lines = process_filestat(file_stat, files_entries[i]->d_name, file_descriptors[i], argv[2]);
+            printf("proces %d: Numar scrieri fisier %s = %d\n\n", getpid(), files_entries[i]->d_name, no_lines);
             exit(0);
         }
 
@@ -74,7 +76,6 @@ int main(int argc, char *argv[]) {
         }
         if ( WIFEXITED(status) ) {
             const int exit_status = WEXITSTATUS(status);
-            //nr_scrieri_array[j] = exit_status;
         }
 
 

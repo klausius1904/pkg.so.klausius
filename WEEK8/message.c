@@ -11,82 +11,57 @@
 #include <sys/fcntl.h>
 #include "message.h"
 
-void convertToGrayscale(unsigned char *data, int width, int height, int bitsPerPixel) {
-    int bytesPerPixel = bitsPerPixel / 8;
+void color_gray(char* file_name)
+{
+    char out_img_name[200];
+    strncpy(out_img_name, file_name, strlen(file_name)-4);
+    strcat(out_img_name, "_modified.bmp");
 
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            int index = i * width * bytesPerPixel + j * bytesPerPixel;
+    int out_img_descriptor = open(out_img_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    if (out_img_descriptor == -1) {
+        perror("Error opening output file");
+        close(out_img_descriptor);
+        exit(EXIT_FAILURE);
+    }
 
-            if (bitsPerPixel == 24) {
-                unsigned char r = data[index];
-                unsigned char g = data[index + 1];
-                unsigned char b = data[index + 2];
-                unsigned char gray = (unsigned char)(0.30 * r + 0.59 * g + 0.11 * b);
+    int input_img_descriptor = open(file_name, O_RDONLY);
+    if (input_img_descriptor == -1) {
+        perror("Error opening input file");
+        exit(EXIT_FAILURE);
+    }
+    char header[54];
+    if (read(input_img_descriptor, header, 54) != 54) {
+        perror("Error reading input file header");
+        close(input_img_descriptor);
+        close(out_img_descriptor);
+        exit(EXIT_FAILURE);
+    }
+    if (write(out_img_descriptor, header, 54) != 54) {
+        perror("eroare la scriere in imagine");
+        close(input_img_descriptor);
+        close(out_img_descriptor);
+        exit(EXIT_FAILURE);
+    }
+    char pixel[3];
+    while (read(input_img_descriptor, pixel, 3) == 3) {
+        unsigned char rosu = pixel[2];
+        unsigned char verde = pixel[1];
+        unsigned char albastru = pixel[0];
+        unsigned char gri = 0.299 * rosu + 0.587 * verde + 0.114 * albastru;
 
-                data[index] = gray;
-                data[index + 1] = gray;
-                data[index + 2] = gray;
-            } else {
-                // Handle other color depths if needed
-                // You may need to adjust this part based on the actual BMP format
-            }
+        pixel[0] = gri;
+        pixel[1] = gri;
+        pixel[2] = gri;
+        if (write(out_img_descriptor, pixel, 3) != 3) {
+            perror("EROARE LA SCRIERE IN IMAGINE");
+            close(input_img_descriptor);
+            close(out_img_descriptor);
+            exit(EXIT_FAILURE);
         }
     }
-}
 
-void convert_bmp(char *file_name) {
-    int fd_input;
-    if((fd_input = open(file_name, O_RDWR)) == -1) {
-        perror("intrarea nu s-a putut deschide!");
-        exit(-1);
-    }
-
-    BMPHeader header;
-    if (read(fd_input, &header, sizeof(BMPHeader)) != sizeof(BMPHeader)) {
-        perror("Error reading BMP header");
-        close(fd_input);
-        exit(EXIT_FAILURE);
-    }
-    printf("%lu\n", sizeof(BMPHeader));
-
-
-    printf("%d\n", header.width);
-    printf("%d\n", header.height);
-
-    int imageSize = header.imageSize != 0 ? header.imageSize : header.size - header.offset;
-    unsigned char *imageData = (unsigned char *)malloc(imageSize);
-    if (imageData == NULL) {
-        perror("Error allocating memory for image data");
-        close(fd_input);
-        exit(EXIT_FAILURE);
-    }
-
-    if (read(fd_input, imageData, imageSize) != imageSize) {
-        perror("Error reading image data");
-        free(imageData);
-        close(fd_input);
-        exit(EXIT_FAILURE);
-    }
-
-    //convertToGrayscale(imageData, infoHeader.width, infoHeader.height, infoHeader.bitsPerPixel);
-
-    // Move file pointer to the beginning of the image data
-    lseek(fd_input, header.offset, SEEK_SET);
-
-    // Write the modified image data back to the file
-    if (write(fd_input, imageData, imageSize) != imageSize) {
-        perror("Error writing to input file");
-        free(imageData);
-        close(fd_input);
-        exit(EXIT_FAILURE);
-    }
-
-    free(imageData);
-    close(fd_input);
-
-    printf("Image converted to grayscale in-place successfully.\n");
-
+    close(input_img_descriptor);
+    close(out_img_descriptor);
 }
 
 DATE timeTConverter(time_t date) {
@@ -223,7 +198,7 @@ char *make_bmp_message(struct stat file_stat, int file_descriptor, char *file_na
         exit(-1);
     }
     if(pid == 0) {
-        convert_bmp(file_name);
+        color_gray(file_name);
         exit(0);
     }
 
