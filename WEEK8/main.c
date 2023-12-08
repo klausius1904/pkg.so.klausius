@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
 
         if((pids[i] = fork()) < 0) {
-            perror("Eroare la crearea procesului");
+            perror("EROARE LA CREAREA PROCESULUI");
             exit(-1);
         }
 
