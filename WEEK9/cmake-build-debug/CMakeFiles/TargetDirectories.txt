@@ -1,0 +1,3 @@
+/Users/grozavklaus/UNI-THINGS/SISTEME DE OPERARE/pkg.so.klausius/WEEK9/cmake-build-debug/CMakeFiles/WEEK8.dir
+/Users/grozavklaus/UNI-THINGS/SISTEME DE OPERARE/pkg.so.klausius/WEEK9/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/grozavklaus/UNI-THINGS/SISTEME DE OPERARE/pkg.so.klausius/WEEK9/cmake-build-debug/CMakeFiles/rebuild_cache.dir
